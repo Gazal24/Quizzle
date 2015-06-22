@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Quizzle</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="progress_meter_text">Fetching, completed - </string>
+    <string name="fetch_puzzle_btn_text">Fetch Puzzles</string>
+    
+</resources>
