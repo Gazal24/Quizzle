@@ -32,7 +32,7 @@ public class DownloadPuzzleTask extends AsyncTask<Integer, Integer, Puzzle[]> {
 		int count = 0;
 		while(count < puzzles.length) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

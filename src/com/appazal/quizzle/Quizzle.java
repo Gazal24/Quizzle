@@ -137,7 +137,7 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		Option[] options = new Option[4];
 		int i = 0;
 		while(i<4) {
-			options[i] = new TextOption(Config.OptionList.get(i), i == 1 ? true : false);
+			options[i] = new TextOption(1, Config.OptionList.get(i), i == 1 ? true : false);
 			i++;
 		}
 		puzzle.setOptions(options);
@@ -156,6 +156,25 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		
 		sendBroadcast(new Intent("what-nonsense").putExtra("quota", 50));
 	}
+	
+   private Puzzle readPuzzleDb(int id){
+       RealmQuery<TextQuestion> qQuery = mRealm.where(TextQuestion.class);
+       qQuery.equalTo("id", id);
+	   TextQuestion ques = qQuery.findFirst();
+	   
+	   RealmQuery<TextOption> oQuery = mRealm.where(TextOption.class);
+	   oQuery.equalTo("quesId", id);
+	                
+	   RealmResults<TextOption> optionList = oQuery.findAll();
+	   
+	   Puzzle puzzle = new Puzzle();
+	   Option[] options = new Option[optionList.size()];
+	   puzzle.setQuestion(ques);
+	   puzzle.setOptions(optionList.toArray(options));
+	   Log.i(TAG, "Returning Stored Content " + ques.getText());
+	   return puzzle;
+    }
+ 
 
 	@Override
 	public void updateProgressMeter(Integer progress) {
@@ -178,6 +197,8 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		}
 		mRealm.commitTransaction();
 		Log.i(TAG, ((TextQuestion)(result[2].getQuestion())).getText());
+		Puzzle puzzle = readPuzzleDb(1);
+		Log.i(TAG, "Option 1 : " + ((TextOption)puzzle.getOptions()[0]).getText());
 	}
 
 	@Override

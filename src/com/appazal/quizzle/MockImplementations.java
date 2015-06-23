@@ -18,10 +18,10 @@ public class MockImplementations {
 			p.setQuestion(tQues);
 
 			Option[] options = new Option[4];
-			options[0] = new TextOption("Random Option " + Config.getRand());
-			options[1] = new TextOption("Random Option " + Config.getRand());
-			options[2] = new TextOption("Random Option " + Config.getRand());
-			options[3] = new TextOption("Random Option " + Config.getRand());
+			options[0] = new TextOption(count, "Random Option " + Config.getRand());
+			options[1] = new TextOption(count, "Random Option " + Config.getRand());
+			options[2] = new TextOption(count, "Random Option " + Config.getRand());
+			options[3] = new TextOption(count, "Random Option " + Config.getRand());
 			p.setOptions(options);
 
 			puzzles[count++] = p;

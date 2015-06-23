@@ -8,24 +8,33 @@ import io.realm.annotations.RealmClass;
 public class TextOption extends RealmObject implements Option {
 
 	@PrimaryKey
+	private int quesId;
 	private String text;
 	private boolean isCorrect;
 	
 	public TextOption() {}
 	
-	public TextOption (String option_text, boolean isCorrect) {
+	/*
+	 * Constructor to initialize Option only with text and assumes it to be incorrect.
+	 */
+	public TextOption (int ques_id, String option_text) {
+		this(ques_id, option_text, false);
+	}
+
+	public TextOption (int ques_id, String option_text, boolean isCorrect) {
+		this.quesId = ques_id;
 		this.text = option_text;
 		this.isCorrect = isCorrect;
 	}
 	
-	/*
-	 * Constructor to initialize Option only with text and assumes it to be incorrect.
-	 */
-	public TextOption (String option_text) {
-		this.text= option_text;
-		this.isCorrect = false;
+	public void setQuesId(int id){
+		this.quesId = id;
 	}
-	
+
+	public int getQuesId() {
+		return this.quesId;
+	}
+
 	public void setText(String text) {
 		this.text = text;
 	}
