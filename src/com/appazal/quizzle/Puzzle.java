@@ -18,7 +18,15 @@ public class Puzzle {
 		return this.question;
 	}
 	
-	public void setOptions(Option[] options){
+	public void setOptions(Option[] options) {
 		this.options = options;
+	}
+	
+	public Option[] getOptions() {
+		return this.options;
+	}
+	
+	public Option getOption(int index) {
+		return this.options[index];
 	}
 }

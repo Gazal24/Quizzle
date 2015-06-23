@@ -1,14 +1,43 @@
 package com.appazal.quizzle.question;
 
-public class TextQuestion implements Question {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
-	private String qText;
+@RealmClass
+public class TextQuestion extends RealmObject implements Question{
+
+	@PrimaryKey
+	private int id;
 	
-	public TextQuestion(String qText) {
-		this.qText = qText; 
+	private String text;
+	
+	public TextQuestion(){
+		
 	}
 	
-	public String getContent() {
-		return qText;
+	public TextQuestion(String text) {
+		this.text = text; 
+	}
+	
+	public TextQuestion(String text, int id) {
+		this.text = text; 
+		this.id = id;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	public String getText() {
+		return text;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

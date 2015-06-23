@@ -1,12 +1,20 @@
 package com.appazal.quizzle.option;
 
-public class TextOption implements Option {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
-	private String option_text;
+@RealmClass
+public class TextOption extends RealmObject implements Option {
+
+	@PrimaryKey
+	private String text;
 	private boolean isCorrect;
 	
+	public TextOption() {}
+	
 	public TextOption (String option_text, boolean isCorrect) {
-		this.option_text = option_text;
+		this.text = option_text;
 		this.isCorrect = isCorrect;
 	}
 	
@@ -14,16 +22,24 @@ public class TextOption implements Option {
 	 * Constructor to initialize Option only with text and assumes it to be incorrect.
 	 */
 	public TextOption (String option_text) {
-		this.option_text= option_text;
+		this.text= option_text;
 		this.isCorrect = false;
 	}
 	
-	public String optionText(){
-		return option_text;
+	public void setText(String text) {
+		this.text = text;
 	}
 	
-	@Override
-	public boolean isCorrect(){
+	public String getText() {
+		return text;
+	}
+	
+	public void setIsCorrect(boolean isCorrect){
+		this.isCorrect = isCorrect;
+	}
+	
+	public boolean getIsCorrect() {
 		return isCorrect;
 	}
+	
 }

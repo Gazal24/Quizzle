@@ -23,7 +23,7 @@ public class TextOptionFragment extends OptionFragment{
 		Log.i(TAG, "in onCreateView");
 		TextView optionTextView = (TextView) layoutInflater.inflate(R.layout.option_fragment, container, false);
 		optionTextView.setTag(constructViewId(id));
-		optionTextView.setText(((TextOption) option).optionText());
+		optionTextView.setText(((TextOption) option).getText());
 		optionTextView.setBackgroundColor(Color.parseColor(Config.OPTIONS_PALETTE.get(id)));
 		super.setListener(optionTextView);
 		return optionTextView;

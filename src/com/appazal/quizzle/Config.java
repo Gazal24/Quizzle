@@ -25,7 +25,7 @@ public class Config {
 		Collections.shuffle(OPTIONS_PALETTE);
 	}
 	
-	public static int getRand(){
+	public static int getRand() {
 		return (int)(Math.random()*100) % 100;
 	}
 }

@@ -1,5 +1,11 @@
 package com.appazal.quizzle;
 
+import java.util.DuplicateFormatFlagsException;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.exceptions.RealmException;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -20,14 +26,16 @@ import com.appazal.quizzle.option.OptionFragment;
 import com.appazal.quizzle.option.OptionFragmentListener;
 import com.appazal.quizzle.option.TextOption;
 import com.appazal.quizzle.option.TextOptionFragment;
+import com.appazal.quizzle.question.Question;
 import com.appazal.quizzle.question.TextQuestion;
 
-public class Quizzle extends Activity implements Progressable<Integer>, AsyncTaskListener<Puzzle>, OptionFragmentListener{
+public class Quizzle extends Activity implements Progressable<Integer>, AsyncTaskListener<Puzzle>, OptionFragmentListener {
 
 	private static final String TAG = "Quizzle :: ";
 	private Context mContext;
 	private Quizzle mActivity;
 	private OptionFragment[] optionFragments = new OptionFragment[Config.options_size];
+	private Realm mRealm; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +45,17 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		
 		mContext = getApplicationContext();
 		mActivity = this;
-
+		mRealm = Realm.getInstance(this);
+		
+		savePuzzle();
+		Puzzle puzzle = createPuzzle();
 		if(savedInstanceState == null) {
 			// when activity is created for the first time.
 			TextView questionView = (TextView) findViewById(R.id.question);
-			questionView.setText(Config.RANDOM_QUESTION);
+			questionView.setText(((TextQuestion)puzzle.getQuestion()).getText());
 			questionView.setBackgroundColor(Color.parseColor(Config.QUESTION_PALETTE));
 			
-			setupOptionsFragment();
+			setupOptionsFragment(puzzle);
 		} else {
 			// when activity is restored from its previous instance.
 		}
@@ -54,21 +65,20 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		mContext.registerReceiver(airplaneModeBR, inf);
 	}
 	
-	private void setupOptionsFragment(){
+	private void setupOptionsFragment(Puzzle puzzle) {
 		FragmentManager mFragmentManager = getFragmentManager();
 		FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
 
 		int id = -1;
 		for(OptionFragment optionFragment : optionFragments) {
 			id++;
-			optionFragment = new TextOptionFragment(id, mActivity, new TextOption(Config.OptionList.get(id), id == 1 ? true : false));
+			optionFragment = new TextOptionFragment(id, mActivity, puzzle.getOption(id));
 			mFragmentTransaction.add(R.id.options_container, optionFragment, "OPTION_FRAGMENT_"+id);
 		}
-
 		mFragmentTransaction.commit();
 	}
-		
-	protected void onStart(){
+
+	protected void onStart() {
 		Log.i(TAG, "in onStart");
 		super.onStart();
 	}
@@ -76,12 +86,10 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 	protected void onResume(){
 		Log.i(TAG, "in onResume");
 		super.onResume();
-		
-		Intent i = new Intent();
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState){
+	protected void onSaveInstanceState(Bundle outState) {
 		Log.i(TAG, "in OnSaveInstanceState");
 		super.onSaveInstanceState(outState);
 	}
@@ -101,7 +109,47 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		return super.onOptionsItemSelected(item);
 	}
 	
-//	@SuppressWarnings("unused") // It is called from layout 
+	private void savePuzzle() {
+		// TODO: Remove try catch from here. Handle primary key bug some other way.
+		try {
+//			mRealm.beginTransaction();
+//			TextQuestion tQues = mRealm.createObject(TextQuestion.class);
+//			tQues.setText(Config.RANDOM_QUESTION);
+//			tQues.setId(2);
+//			mRealm.commitTransaction();
+
+//			TextQuestion tQues = new TextQuestion("Hello", 1); 
+//			mRealm.beginTransaction();
+//			mRealm.copyToRealm(tQues);
+//			tQues = new TextQuestion(Config.RANDOM_QUESTION, 2);
+//			myQues = mRealm.copyToRealm(tQues);
+//			mRealm.commitTransaction();
+
+		} catch (RealmException re) {
+			mRealm.cancelTransaction();
+			re.printStackTrace();
+		}
+	}
+	
+	private Puzzle createPuzzle() {
+		Puzzle puzzle = new Puzzle();
+		puzzle.setQuestion(new TextQuestion(Config.RANDOM_QUESTION));
+		Option[] options = new Option[4];
+		int i = 0;
+		while(i<4) {
+			options[i] = new TextOption(Config.OptionList.get(i), i == 1 ? true : false);
+			i++;
+		}
+		puzzle.setOptions(options);
+		
+//		RealmQuery<TextQuestion> query = mRealm.where(TextQuestion.class);
+//		query.equalTo("id", 2);
+//		TextQuestion tQues = query.findFirst();
+//		Log.i(TAG, "Returning Stored Content " + tQues.getText());
+		return puzzle;
+	}
+	
+	// It is called from layout 
 	public void onFetchPuzzleButtonClick(View v){
 		Log.i(TAG, "I'm going to fetch content");
 		new DownloadPuzzleTask(mActivity, mActivity).execute(5);
@@ -118,11 +166,22 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 
 	@Override
 	public void onPostExecute(Puzzle[] result) {
-		Log.i(TAG, ((TextQuestion)(result[2].getQuestion())).getContent());
+		mRealm.beginTransaction();
+//		mRealm.copyToRealm(new TextQuestion("hello", 2));
+		for(Puzzle p : result) {
+			try {
+				mRealm.copyToRealm((TextQuestion)(p.getQuestion()));
+				mRealm.copyToRealm((TextOption)p.getOptions()[0]);
+			} catch (RealmException re) {
+				re.printStackTrace();
+			}
+		}
+		mRealm.commitTransaction();
+		Log.i(TAG, ((TextQuestion)(result[2].getQuestion())).getText());
 	}
 
 	@Override
 	public void onClickCallback(Option o) {
-		Log.i(TAG, o.isCorrect() + "");
+		Log.i(TAG, ((TextOption)o).getIsCorrect() + "");
 	}
 }

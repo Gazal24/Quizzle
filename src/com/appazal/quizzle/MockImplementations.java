@@ -2,6 +2,7 @@ package com.appazal.quizzle;
 
 import com.appazal.quizzle.option.Option;
 import com.appazal.quizzle.option.TextOption;
+import com.appazal.quizzle.question.Question;
 import com.appazal.quizzle.question.TextQuestion;
 
 public class MockImplementations {
@@ -13,7 +14,7 @@ public class MockImplementations {
 		while(count < puzzles.length) {
 			Puzzle p = new Puzzle();
 
-			TextQuestion tQues = new TextQuestion("Random Question " + Config.getRand());
+			TextQuestion tQues = new TextQuestion("Random Question " + Config.getRand(), count);
 			p.setQuestion(tQues);
 
 			Option[] options = new Option[4];
