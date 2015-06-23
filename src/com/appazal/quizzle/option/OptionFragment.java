@@ -32,7 +32,6 @@ public abstract class OptionFragment extends Fragment{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "in onCreate");
 		
 		if(savedInstanceState != null) {
 			if(savedInstanceState.getInt("state_changed") == 1) {

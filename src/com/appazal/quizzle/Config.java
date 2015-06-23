@@ -9,7 +9,6 @@ public class Config {
 
 	protected static final String TAG = "Quizzle :";
 	public static String RANDOM_QUESTION = "A class member declared protected becomes member of subclass of which type?";
-	public static String QUESTION_PALETTE = "#444444";
 	
 	public static int options_size = 4;
 
@@ -17,7 +16,6 @@ public class Config {
 	public static List<String> OptionList = new ArrayList<String>(Arrays.asList(options));
 
 	private static String[] COLORS = {"#AA3333", "#33AA33", "#4444AA", "#777733"};
-//	private static String[] COLORS = {"#FFFB67", "#D4D26A", "#807D15", "#555300"};
 	public static List<String> OPTIONS_PALETTE = new ArrayList<String>(Arrays.asList(COLORS));
 
 	static {

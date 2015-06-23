@@ -20,7 +20,6 @@ public class TextOptionFragment extends OptionFragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstaceState) {
-		Log.i(TAG, "in onCreateView");
 		TextView optionTextView = (TextView) layoutInflater.inflate(R.layout.option_fragment, container, false);
 		optionTextView.setTag(constructViewId(id));
 		optionTextView.setText(((TextOption) option).getText());

@@ -1,13 +1,11 @@
 package com.appazal.quizzle.option;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
 public class TextOption extends RealmObject implements Option {
 
-	@PrimaryKey
 	private int quesId;
 	private String text;
 	private boolean isCorrect;
