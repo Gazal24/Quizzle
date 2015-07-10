@@ -1,5 +1,7 @@
 package com.appazal.quizzle;
 
+import com.appazal.quizzle.model.Puzzle;
+
 import android.os.AsyncTask;
 import android.util.Log;
 

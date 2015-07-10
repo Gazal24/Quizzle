@@ -1,4 +1,6 @@
-package com.appazal.quizzle.option;
+package com.appazal.quizzle;
+
+import com.appazal.quizzle.model.option.Option;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -39,7 +41,6 @@ public abstract class OptionFragment extends Fragment{
 			}
 			this.id = savedInstanceState.getInt("state_changed");
 		}
-		
 		setRetainInstance(true);
 	}
 	

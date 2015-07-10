@@ -1,15 +1,15 @@
-package com.appazal.quizzle.option;
+package com.appazal.quizzle;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.appazal.quizzle.Config;
 import com.appazal.quizzle.R;
+import com.appazal.quizzle.model.option.Option;
+import com.appazal.quizzle.model.option.TextOption;
 
 public class TextOptionFragment extends OptionFragment{
 
@@ -17,7 +17,7 @@ public class TextOptionFragment extends OptionFragment{
 		super(id, o);
 		this.option = option;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstaceState) {
 		TextView optionTextView = (TextView) layoutInflater.inflate(R.layout.option_fragment, container, false);

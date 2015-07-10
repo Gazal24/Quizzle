@@ -1,6 +1,7 @@
 package com.appazal.quizzle;
 
-import io.realm.Realm;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -17,32 +18,28 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appazal.quizzle.option.Option;
-import com.appazal.quizzle.option.OptionFragment;
-import com.appazal.quizzle.option.OptionFragmentListener;
-import com.appazal.quizzle.option.TextOption;
-import com.appazal.quizzle.option.TextOptionFragment;
-import com.appazal.quizzle.question.TextQuestion;
+import com.appazal.quizzle.model.Puzzle;
+import com.appazal.quizzle.model.option.Option;
+import com.appazal.quizzle.model.option.TextOption;
+import com.appazal.quizzle.model.question.TextQuestion;
+import com.appazal.quizzle.service.PuzzleService;
 
 public class Quizzle extends Activity implements Progressable<Integer>, AsyncTaskListener<Puzzle>, OptionFragmentListener {
 
 	private static final String TAG = "Quizzle :: ";
 	private Context mContext;
 	private Quizzle mActivity;
-//	private OptionFragment[] optionFragments = new OptionFragment[Config.options_size];
-	private Realm mRealm;
 	private int mCurrentPuzzleId = 0; 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "in onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quizzle);
-		
+
 		mContext = getApplicationContext();
 		mActivity = this;
-		mRealm = Realm.getInstance(this);
-		
+
 		Puzzle puzzle = MockImplementations.createPuzzle();
 		if(savedInstanceState == null) {
 			// when activity is created for the first time.
@@ -50,16 +47,16 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		} else {
 			// when activity is restored from its previous instance.
 		}
-		
+
 		IntentFilter inf = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
 		AirplaneModeBroadcastReceiver airplaneModeBR = new AirplaneModeBroadcastReceiver();
 		mContext.registerReceiver(airplaneModeBR, inf);
 	}
-	
+
 	private void displayPuzzle(Puzzle puzzle) {
 		TextView questionView = (TextView) findViewById(R.id.question);
 		questionView.setText(((TextQuestion)puzzle.getQuestion()).getText());
-		
+
 		setupOptionsFragment(puzzle);
 	}
 
@@ -85,12 +82,12 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		Log.i(TAG, "in onStart");
 		super.onStart();
 	}
-	
+
 	protected void onResume(){
 		Log.i(TAG, "in onResume");
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.i(TAG, "in OnSaveInstanceState");
@@ -111,15 +108,18 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	// It is called from layout 
-	public void onFetchPuzzleButtonClick(View v) {
+	public void onFetchPuzzleButtonClick(View v) throws JSONException {
 		Log.i(TAG, "I'm going to fetch content");
+		//		Log.i(TAG, Puzzle.toJson(MockImplementations.getPuzzles(3)));
+		Puzzle[] puzzles = PuzzleService.convertJsonToPuzzle(MockImplementations.getPuzzleJson());
+		Log.i(TAG, "Magic ::: " + ((TextQuestion)puzzles[0].getQuestion()).getText());
 		new DownloadPuzzleTask(mActivity, mActivity).execute(5);
-		
+
 		sendBroadcast(new Intent("what-nonsense").putExtra("quota", 50));
 	}
-	
+
 	@Override
 	public void updateProgressMeter(Integer progress) {
 		Log.i(TAG, "Will update progress 1");
@@ -129,14 +129,15 @@ public class Quizzle extends Activity implements Progressable<Integer>, AsyncTas
 
 	@Override
 	public void onPostExecute(Puzzle[] result) {
-		Puzzle.savePuzzlesDb(mRealm, result);
+		Log.i(TAG, PuzzleService.convertPuzzleToJson(result));
 	}
 
 	@Override
 	public void onClickCallback(Option o) {
 		Log.i(TAG, ((TextOption)o).getIsCorrect() + "");
 		if(((TextOption)o).getIsCorrect())
-			displayPuzzle(Puzzle.readPuzzleDb(mRealm, getNextPuzzleId()));
+			Log.i(TAG, "Correct Answer. Go To next puzzle.");
+//			displayPuzzle(PuzzleService.readPuzzleDb(getNextPuzzleId()));
 		else {
 			Toast t = Toast.makeText(mContext, "Try Again", Toast.LENGTH_SHORT);
 			t.show();
