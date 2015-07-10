@@ -5,7 +5,7 @@ import com.appazal.quizzle.model.question.Question;
 
 public class Puzzle {
 
-//	private Topic[] topics;
+	private Topic[] topics;
 	private Question question;
 	private Option[] options;
 
@@ -27,12 +27,12 @@ public class Puzzle {
 		return this.options;
 	}
 
-//	public void setTopics(Topic[] topics) {
-//		this.topics = topics;
-//	}
-//
-//	public Topic[] getTopics() {
-//		return this.topics;
-//	}
+	public void setTopics(Topic[] topics) {
+		this.topics = topics;
+	}
+
+	public Topic[] getTopics() {
+		return this.topics;
+	}
 }
 
