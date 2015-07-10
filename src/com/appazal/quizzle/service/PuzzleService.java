@@ -5,7 +5,6 @@ import org.json.JSONException;
 import com.appazal.quizzle.Config;
 import com.appazal.quizzle.model.Puzzle;
 import com.appazal.quizzle.model.option.Option;
-import com.google.gson.Gson;
 
 public class PuzzleService {
 

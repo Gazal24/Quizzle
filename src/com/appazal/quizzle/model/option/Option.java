@@ -1,5 +1,7 @@
 package com.appazal.quizzle.model.option;
 
+import com.appazal.quizzle.model.iGsonTypeSetter;
+
 public abstract class Option implements iGsonTypeSetter {
 	
 	private int questionId;

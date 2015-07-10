@@ -1,4 +1,4 @@
-package com.appazal.quizzle.model.option;
+package com.appazal.quizzle.model;
 
 public interface iGsonTypeSetter {
 

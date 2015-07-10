@@ -1,6 +1,6 @@
 package com.appazal.quizzle.model.question;
 
-import com.appazal.quizzle.model.option.iGsonTypeSetter;
+import com.appazal.quizzle.model.iGsonTypeSetter;
 
 public abstract class Question implements iGsonTypeSetter {
 
